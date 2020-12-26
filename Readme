@@ -1,0 +1,65 @@
+mnist data set
+
+
+http://cis.jhu.edu/~sachin/digit/digit.html
+
+typedef std::valarray<double> vect;
+std::valarray<std::pair<vect, vect>> oldLoadMnist(std::string folder_path, int image_size = 28, int number_of_images = 10'000)
+{
+
+    std::cout << "readind mnist located at " << folder_path << std::endl;
+
+    std::string data_path = folder_path + "data";
+
+    int image_full_size = image_size * image_size;
+
+    std::valarray<std::pair<vect, vect>> dataset(number_of_images);
+
+    int added_pictures = 0;
+
+    // for the 10 files
+    for (int i = 5; i < 10; i++)
+    {
+
+        std::cout << "file " << i << std::endl;
+        std::string file_path = data_path + std::to_string(i);
+
+        std::ifstream file(file_path, std::ios::binary);
+
+        //
+        if (file.is_open())
+        {
+            // going throught the whole file
+            while (!file.eof())
+            {
+                // just taking as many pictures as needed
+                if (added_pictures >= number_of_images)
+                {
+                    return dataset;
+                }
+
+                for (int y = 0; y < image_size; y++)
+                {
+                    for (int x = 0; x < image_size; x++)
+                    {
+
+                        unsigned char byte;
+                        file >> byte;
+                        std::cout << (((int)byte) > 125 ? ' ' : '#');
+                    }
+                    std::cout << std::endl;
+                }
+
+                added_pictures += 1;
+                std::cout << "picture " << added_pictures << std::endl;
+            }
+            file.close();
+        }
+        else
+        {
+            throw std::runtime_error("Cannot open file `" + file_path + "`!");
+        }
+
+        return dataset;
+    }
+}
