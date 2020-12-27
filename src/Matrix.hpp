@@ -17,6 +17,7 @@ public:
 
     // C
     Matrix(Matrix const &other);
+    Matrix &operator=(const Matrix &other);
 
     // METHODS
     void randomInit();
@@ -34,6 +35,8 @@ public:
 
     // Destructor
     ~Matrix();
+
+    auto test();
 };
 
 Matrix dot(const std::valarray<double> &C, const std::valarray<double> &L);

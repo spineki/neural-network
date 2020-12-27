@@ -24,7 +24,8 @@ private:
 public:
     Network(int *layer_sizes, int nb_layer, double learning_rate);
     std::valarray<double> feedForward(const std::valarray<double> &inputs);
-    std::pair<std::valarray<std::valarray<double>>, std::valarray<Matrix>> backPropagation(const std::valarray<double> &X, const std::valarray<double> &Y);
+    //std::pair<std::valarray<std::valarray<double>>, std::valarray<Matrix>> backPropagation(const std::valarray<double> &X, const std::valarray<double> &Y);
+    void backPropagation(const std::valarray<double> &X, const std::valarray<double> &Y);
     void update_mini_batch(std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> &mini_batch, double eta);
     void stochasticGradientDescent(std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> &training_datas, int epochs, int mini_batch_size, double eta);
     int evaluate(const std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> &test_datas);

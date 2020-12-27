@@ -134,7 +134,7 @@ std::valarray<double> Network::feedForward(const std::valarray<double> &inputs)
     return outputs;
 }
 
-std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(const vect &X, const vect &Y)
+void Network::backPropagation(const vect &X, const vect &Y)
 {
 
     std::cout << "  ⚙️  backPropagation of " << this->weights.size() << " wieghts" << std::endl;
@@ -174,7 +174,10 @@ std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(c
     vect delta = cost_derivative(activations[activations.size() - 1], Y) * (zs[zs.size() - 1]).apply(sigmoid_prime);
 
     nabla_b[nabla_b.size() - 1] = delta;
-    nabla_w[nabla_w.size() - 1] = dot(delta, activations[activations.size() - 2]);
+
+    Matrix new_w = dot(delta, activations[activations.size() - 2]);
+
+    nabla_w[nabla_w.size() - 1] = new_w;
 
     for (int l = 2; l < this->nb_layer; l++)
     {
@@ -189,9 +192,9 @@ std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(c
         nabla_w[nabla_w.size() - l] = dot(delta, activations[activations.size() - l - 1]);
     }
 
-    
-    std::cout << "🎈 fin backpropagation" << std::endl;
-    return {nabla_b, nabla_w};
+    std::cout
+        << "🎈 fin backpropagation" << std::endl;
+    //return {nabla_b, nabla_w};
 }
 
 /**

@@ -67,6 +67,24 @@ Matrix::Matrix(Matrix const &model)
     std::cout << "✔️  copy done: " << &model << " -> " << this << " |   " << ((this->values == model.values) ? "💥" : "✔️") << "  " << this->values << std::endl;
 }
 
+Matrix &Matrix::operator=(const Matrix &model)
+{
+    std::cout << "🛠️  = construction: " << &model << " -> " << this << std::endl;
+    this->nb_rows = model.nb_rows;
+    this->nb_columns = model.nb_columns;
+    this->values = new double[nb_rows * nb_columns];
+    for (int i = 0; i < nb_rows; i++)
+    {
+        for (int j = 0; j < nb_columns; j++)
+        {
+            int position = i * nb_columns + j;
+            this->values[position] = model.values[position];
+        }
+    }
+
+    std::cout << "✔️  = done: " << &model << " -> " << this << " |   " << ((this->values == model.values) ? "💥" : "✔️") << "  " << this->values << std::endl;
+};
+
 // METHODS
 
 void Matrix::randomInit()
@@ -125,6 +143,11 @@ Matrix::~Matrix()
     std::cout << "💀  Destructeur terminé" << std::endl;
 }
 
+auto Matrix::test()
+{
+    return this->values;
+}
+
 // Compute
 
 std::valarray<double> Matrix::dot(const std::valarray<double> &X)
@@ -156,11 +179,13 @@ std::valarray<double> Matrix::dot(const std::valarray<double> &X)
 
 Matrix dot(const std::valarray<double> &C, const std::valarray<double> &L)
 {
+    std::cout << "<" << std::endl;
     Matrix M(C.size(), L.size());
+    std::cout << M.test() << std::endl;
 
-    for (int i = 0; i < (int)C.size(); i++)
+    for (std::size_t i = 0; i < C.size(); i++)
     {
-        for (int j = 0; j < (int)L.size(); j++)
+        for (std::size_t j = 0; j < L.size(); j++)
         {
             M.set(i, j, C[i] * L[j]);
         }
