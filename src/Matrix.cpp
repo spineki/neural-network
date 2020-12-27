@@ -2,6 +2,7 @@
 #include <valarray>
 #include <random>
 #include <iostream>
+#include <cassert>
 
 #include "Matrix.hpp"
 
@@ -21,7 +22,6 @@ void fill_array_with_random(std::valarray<double> &array, double a = 0, double b
 void fill_array_with_random(double *array, std::size_t size, double a = 0, double b = 1)
 {
 
-    std::cout << "filling random array" << size << std::endl;
     std::uniform_real_distribution<double> uniform_distrib(a, b);
 
     for (std::size_t i = 0; i < size; i++)
@@ -35,6 +35,8 @@ Matrix::Matrix()
     this->nb_rows = 0;
     this->nb_columns = 0;
     this->values = new double[0];
+
+    std::cout << "❄️ Init Matrix : " << this->nb_rows << " X " << this->nb_columns << " = " << this->nb_columns * this->nb_rows << " : " << this << std::endl;
 }
 
 Matrix::Matrix(int nb_rows, int nb_columns)
@@ -43,33 +45,47 @@ Matrix::Matrix(int nb_rows, int nb_columns)
     this->nb_columns = nb_columns;
     this->values = new double[nb_rows * nb_columns];
 
-    std::cout << "Init Matrix : " << this->nb_rows << " X " << this->nb_columns << " = " << this->nb_columns * this->nb_rows << std::endl;
+    std::cout << "💧 Init Matrix : " << this->nb_rows << " X " << this->nb_columns << " = " << this->nb_columns * this->nb_rows << " : " << this << std::endl;
 }
 
-// Matrix::Matrix()
-// {
-// }
+// Copy constructor
+Matrix::Matrix(Matrix const &model)
+{
+    std::cout << "🛠️  copy construction: " << &model << " -> " << this << std::endl;
+    this->nb_rows = model.nb_rows;
+    this->nb_columns = model.nb_columns;
+    this->values = new double[nb_rows * nb_columns];
+    for (int i = 0; i < nb_rows; i++)
+    {
+        for (int j = 0; j < nb_columns; j++)
+        {
+            int position = i * nb_columns + j;
+            this->values[position] = model.values[position];
+        }
+    }
+
+    std::cout << "✔️  copy done: " << &model << " -> " << this << " |   " << ((this->values == model.values) ? "💥" : "✔️") << "  " << this->values << std::endl;
+}
 
 // METHODS
 
 void Matrix::randomInit()
 {
-    std::cout << "Random init" << std::endl;
-
-    fill_array_with_random(this->values, nb_rows * nb_columns, 0, 1);
+    // std::cout << "Random init" << std::endl;
+    fill_array_with_random(this->values, this->nb_rows * this->nb_columns, 0, 1);
 }
 
-double Matrix::get(int i, int j)
+double const Matrix::get(int i, int j)
 {
     return this->values[j + i * nb_columns];
 }
 
-void Matrix::set(int i, int j, double value)
+void Matrix::set(const int i, const int j, const double value)
 {
     this->values[j + i * nb_columns] = value;
 }
 
-std::string Matrix::to_string()
+std::string const Matrix::to_string()
 {
     std::string display = "";
 
@@ -84,11 +100,38 @@ std::string Matrix::to_string()
     return display;
 }
 
+Matrix const Matrix::transpose()
+{
+    // opposite ordre for columns and rows
+    Matrix matrix_T(this->nb_columns, this->nb_rows);
+
+    for (int i = 0; i < this->nb_rows; i++)
+    {
+        for (int j = 0; j < this->nb_columns; j++)
+        {
+            matrix_T.set(j, i, this->get(i, j));
+        }
+    }
+
+    return matrix_T;
+}
+
+// Destructor
+Matrix::~Matrix()
+{
+    std::cout << "🔥  Destructeur appellé: " << this << " ressources : " << this->values << std::endl;
+
+    delete[] this->values;
+    std::cout << "💀  Destructeur terminé" << std::endl;
+}
+
 // Compute
 
 std::valarray<double> Matrix::dot(const std::valarray<double> &X)
 {
-    std::valarray<double> Y(X);
+    assert(this->nb_columns == X.size());
+
+    std::valarray<double> Y(this->nb_rows);
 
     for (int i = 0; i < this->nb_rows; i++)
     {
@@ -98,12 +141,6 @@ std::valarray<double> Matrix::dot(const std::valarray<double> &X)
         }
     }
     return Y;
-}
-
-// Destructor
-Matrix::~Matrix()
-{
-    delete[] this->values;
 }
 
 // Related functions

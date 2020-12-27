@@ -15,14 +15,19 @@ public:
 
     Matrix(int nb_rows, int nb_columns);
 
+    // C
+    Matrix(Matrix const &other);
+
     // METHODS
     void randomInit();
 
-    double get(int i, int j);
+    double const get(const int i, const int j);
 
-    void set(int i, int j, double value);
+    void set(const int i, const int j, const double value);
 
-    std::string to_string();
+    Matrix const transpose();
+
+    std::string const to_string();
 
     // Compute
     std::valarray<double> dot(const std::valarray<double> &X);

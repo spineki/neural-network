@@ -8,11 +8,6 @@
 
 typedef std::valarray<double> vect;
 
-void test()
-{
-    std::cout << "starf" << std::endl;
-}
-
 template <typename T>
 void fill_array_with_random(std::valarray<T> &array, double a = 0, double b = 1)
 {
@@ -74,7 +69,7 @@ vect cost_derivative(vect output_activations, vect y)
 
 Network::Network(int *layer_sizes, int nb_layer, double learning_rate)
 {
-    std::cout << "⚙️  Network initialisation..." << std::endl;
+    std::cout << "📚  Network initialisation..." << std::endl;
     this->learning_rate = learning_rate;
     this->nb_layer = nb_layer;
 
@@ -85,21 +80,23 @@ Network::Network(int *layer_sizes, int nb_layer, double learning_rate)
 
     // initializing (nb_layer -1) numbers for biaises
     // this->biases =std::valarray<double>(nb_layer-1).apply();
-    std::cout << "Creating layers for biases..." << std::endl;
+    std::cout << "Creating layers for biases: " << nb_layer - 1 << std::endl;
     this->biases.resize(nb_layer - 1);
 
     // initializing (nb_layer -1) number of arrays for weights
     for (int i = 0; i < nb_layer - 1; i++)
     {
-        std::cout << "Initializing layer " << i << std::endl;
         int nb_neuron_input = layer_sizes[i];
         int nb_neuron_output = layer_sizes[i + 1];
 
+        std::cout << "Initializing layer " << i << ": " << nb_neuron_input << " -> " << nb_neuron_output << std::endl;
+
         // randow weights
         std::cout << "  random weights..." << std::endl;
-        this->weights.push_back(Matrix(nb_neuron_output, nb_neuron_input));
+
+        this->weights.emplace_back(Matrix(nb_neuron_output, nb_neuron_input));
+
         this->weights[i].randomInit();
-        std::cout << this->weights[i].to_string() << std::endl;
 
         //random biases
         std::cout << "  random biaises..." << std::endl;
@@ -139,18 +136,31 @@ std::valarray<double> Network::feedForward(const std::valarray<double> &inputs)
 
 std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(const vect &X, const vect &Y)
 {
+
+    std::cout << "  ⚙️  backPropagation of " << this->weights.size() << " wieghts" << std::endl;
+
     std::valarray<vect> nabla_b(this->biases.size());
     std::valarray<Matrix> nabla_w(this->weights.size());
+    for (std::size_t i = 0; i < this->weights.size(); i++)
+    {
+        nabla_w[i] = (this->weights[i]);
+    }
+
+    std::cout << "vector created" << std::endl;
 
     vect activation = X;
     std::valarray<vect> activations(this->nb_layer);
     activations[0] = X;
     std::valarray<vect> zs(this->nb_layer - 1);
 
+    std::cout << "Feedforward:" << std::endl;
+
     for (int i = 0; i < this->nb_layer - 1; i++)
     {
-        auto w = this->weights[i];
-        auto b = this->biases[i];
+        std::cout << "layer " << i << "/" << this->nb_layer - 1 << std::endl;
+        // copies de matrices inutiles, TODO
+        Matrix w = this->weights[i];
+        vect b = this->biases[i];
 
         vect z = w.dot(activation) + b;
         zs[i] = z;
@@ -158,6 +168,9 @@ std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(c
         activations[i + 1] = activation;
     }
 
+    // testé jusqu'ici: TODO aller plus loin
+
+    std::cout << "Backpropag" << std::endl;
     vect delta = cost_derivative(activations[activations.size() - 1], Y) * (zs[zs.size() - 1]).apply(sigmoid_prime);
 
     nabla_b[nabla_b.size() - 1] = delta;
@@ -165,14 +178,19 @@ std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(c
 
     for (int l = 2; l < this->nb_layer; l++)
     {
+        std::cout << "b layer " << l << "/" << this->nb_layer << std::endl;
         vect z = zs[zs.size() - l];
         vect sp = z.apply(sigmoid_prime);
 
-        delta = (this->weights[this->weights.size() - l + 1]).dot(delta) * sp;
+        Matrix weight_T = this->weights[this->weights.size() - l + 1].transpose();
+
+        delta = weight_T.dot(delta) * sp;
         nabla_b[nabla_b.size() - l] = delta;
         nabla_w[nabla_w.size() - l] = dot(delta, activations[activations.size() - l - 1]);
     }
 
+    
+    std::cout << "🎈 fin backpropagation" << std::endl;
     return {nabla_b, nabla_w};
 }
 
@@ -182,22 +200,29 @@ std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(c
 * */
 void Network::update_mini_batch(std::valarray<std::pair<vect, vect>> &mini_batch, double eta)
 {
-    auto nabla_b = vect(this->biases.size());
+    std::cout << "⚙️  update_mini_batch. Size=" << mini_batch.size() << std::endl;
+
+    vect nabla_b = vect(this->biases.size());
     // auto nabla_w =
 
     for (auto training_data : mini_batch)
     {
-        auto [delta_nabla_b, delta_nabla_w] = this->backPropagation(training_data.first, training_data.second);
+        this->backPropagation(training_data.first, training_data.second);
+        //auto [delta_nabla_b, delta_nabla_w] = this->backPropagation(training_data.first, training_data.second);
     }
 }
 
 void Network::stochasticGradientDescent(std::valarray<std::pair<vect, vect>> &training_datas, int epochs, int mini_batch_size, double eta) //, const vect &test_data = {}
 {
 
+    std::cout << "📚 SGD" << std::endl;
+
     std::random_device rd;
     std::mt19937 rng(rd());
 
     double nb_data = training_datas.size();
+    std::cout << "nb data " << nb_data << std::endl;
+    std::cout << nb_data << std::endl;
 
     // auto indices = vect(nb_data);
     // for (int i = 0; i < nb_data; i++)
@@ -207,18 +232,22 @@ void Network::stochasticGradientDescent(std::valarray<std::pair<vect, vect>> &tr
 
     for (int epoch = 0; epoch < epochs; epoch++)
     {
+        std::cout << "Running epochs:" << epoch << '/' << epochs << std::endl;
 
         std::shuffle(std::begin(training_datas), std::end(training_datas), rng);
 
         int nb_batch = std::ceil(nb_data / mini_batch_size);
+        std::cout << "nb_batch:" << nb_batch << std::endl;
 
         for (int batch_num = 0; batch_num < nb_batch; batch_num += mini_batch_size)
         {
+            std::cout << "  Running batch:" << batch_num << '/' << nb_batch << std::endl;
             std::valarray<std::pair<vect, vect>> mini_batch = training_datas[std::slice(batch_num, mini_batch_size, 1)];
 
             this->update_mini_batch(mini_batch, eta);
         }
     }
+    std::cout << "🎈  fini" << std::endl;
 }
 
 int Network::evaluate(const std::valarray<std::pair<vect, vect>> &test_datas)

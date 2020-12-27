@@ -6,6 +6,7 @@
 #include <valarray>
 #include <error.h>
 #include <sstream>
+#include <filesystem>
 
 void printImage(std::valarray<double> &picture, int size)
 {
@@ -23,6 +24,8 @@ void printImage(std::valarray<double> &picture, int size)
 typedef std::valarray<double> vect;
 std::valarray<std::pair<vect, vect>> loadMnistFile(std::string file_path, int image_size = 28, int number_of_images = 10)
 {
+    std::cout << std::filesystem::current_path() << std::endl;
+
     std::cout << "readind mnist located at " << file_path << std::endl;
 
     std::valarray<std::pair<vect, vect>> dataset(number_of_images);
@@ -92,10 +95,10 @@ std::valarray<std::pair<vect, vect>> loadMnistFile(std::string file_path, int im
 
 std::valarray<std::pair<vect, vect>> loadMnistTrain(std::string folder_path, int image_size = 28)
 {
-    return loadMnistFile(folder_path + "mnist_train.csv", image_size, 60'0000);
+    return loadMnistFile(folder_path + "mnist_train.csv", image_size, 6'000); //60'000
 }
 
 std::valarray<std::pair<vect, vect>> loadMnistTest(std::string folder_path, int image_size = 28)
 {
-    return loadMnistFile(folder_path + "mnist_test.csv", image_size, 10'0000);
+    return loadMnistFile(folder_path + "mnist_test.csv", image_size, 1'000); //10'0000
 }
