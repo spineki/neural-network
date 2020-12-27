@@ -1,3 +1,6 @@
+clear && meson compile && ./src/MNT
+
+
 mnist data set
 
 

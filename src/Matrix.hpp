@@ -11,10 +11,12 @@ private:
     int nb_columns;
 
 public:
+    Matrix();
+
     Matrix(int nb_rows, int nb_columns);
 
     // METHODS
-    void random_init();
+    void randomInit();
 
     double get(int i, int j);
 
@@ -28,3 +30,5 @@ public:
     // Destructor
     ~Matrix();
 };
+
+Matrix dot(const std::valarray<double> &C, const std::valarray<double> &L);
