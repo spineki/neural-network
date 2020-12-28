@@ -8,4 +8,4 @@ std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> loadMnist
 std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> loadMnistTest(std::string folder_path, int image_size = 28);
 
 // void printImage(std::valarray<double> picture, int size);
-void printImage(std::valarray<double> &picture, int size);
+void printImage(const std::valarray<double> &picture, int size);

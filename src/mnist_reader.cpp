@@ -8,14 +8,14 @@
 #include <sstream>
 #include <filesystem>
 
-void printImage(std::valarray<double> &picture, int size)
+void printImage(const std::valarray<double> &picture, int size)
 {
 
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
-            std::cout << (picture[i * size + j] > 125 ? ' ' : '#');
+            std::cout << (picture[i * size + j] > 0.5 ? ' ' : '#');
         }
         printf("\n");
     }
@@ -64,7 +64,7 @@ std::valarray<std::pair<vect, vect>> loadMnistFile(std::string file_path, int im
             std::valarray<double> picture(image_size * image_size);
             while (ss >> val)
             {
-                picture[j + i * image_size] = val;
+                picture[j + i * image_size] = (double)val / 255;
                 j++;
                 if (j >= image_size)
                 {
@@ -73,7 +73,9 @@ std::valarray<std::pair<vect, vect>> loadMnistFile(std::string file_path, int im
                 }
                 // If the next token is a comma, ignore it and move on
                 if (ss.peek() == ',')
+                {
                     ss.ignore();
+                }
             }
 
             dataset[added_pictures] = std::make_pair(picture, label_array);
@@ -95,7 +97,7 @@ std::valarray<std::pair<vect, vect>> loadMnistFile(std::string file_path, int im
 
 std::valarray<std::pair<vect, vect>> loadMnistTrain(std::string folder_path, int image_size = 28)
 {
-    return loadMnistFile(folder_path + "mnist_train.csv", image_size, 6'000); //60'000
+    return loadMnistFile(folder_path + "mnist_train.csv", image_size, 60'000); //60'000
 }
 
 std::valarray<std::pair<vect, vect>> loadMnistTest(std::string folder_path, int image_size = 28)

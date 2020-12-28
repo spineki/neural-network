@@ -18,8 +18,8 @@ public:
     // C
     Matrix(Matrix const &other);
     Matrix operator=(const Matrix &other);
-    friend Matrix &operator+(const Matrix &m1, const Matrix &m2);
-    friend Matrix &operator+=(Matrix &m1, const Matrix &m2);
+    friend Matrix operator+(const Matrix &m1, const Matrix &m2);
+    friend Matrix operator+=(Matrix &m1, const Matrix &m2);
     friend Matrix operator*(const Matrix &m, const double k);
     friend Matrix operator-(const Matrix &m1, const Matrix &m2);
     // METHODS
@@ -29,10 +29,8 @@ public:
     int const getNbColumns();
     int const getNbRows();
 
-    double const
-    get(const int i, const int j);
-
-    void set(const int i, const int j, const double value);
+    double &operator()(const int row, const int col);
+    double operator()(const int row, const int col) const;
 
     Matrix const transpose();
 
