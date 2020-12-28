@@ -134,7 +134,7 @@ std::valarray<double> Network::feedForward(const std::valarray<double> &inputs)
     return outputs;
 }
 
-void Network::backPropagation(const vect &X, const vect &Y)
+std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(const vect &X, const vect &Y)
 {
 
     std::cout << "  ⚙️  backPropagation of " << this->weights.size() << " wieghts" << std::endl;
@@ -194,7 +194,7 @@ void Network::backPropagation(const vect &X, const vect &Y)
 
     std::cout
         << "🎈 fin backpropagation" << std::endl;
-    //return {nabla_b, nabla_w};
+    return {nabla_b, nabla_w};
 }
 
 /**
@@ -205,17 +205,42 @@ void Network::update_mini_batch(std::valarray<std::pair<vect, vect>> &mini_batch
 {
     std::cout << "⚙️  update_mini_batch. Size=" << mini_batch.size() << std::endl;
 
-    vect nabla_b = vect(this->biases.size());
-    // auto nabla_w =
+    std::valarray<vect> nabla_b(this->biases.size());
+    std::valarray<Matrix> nabla_w(this->weights.size());
+
+    for (int i = 0; i < nabla_b.size(); i++)
+    {
+        nabla_b[i] = vect(this->biases[i].size());
+    }
+
+    for (int i = 0; i < nabla_w.size(); i++)
+    {
+        nabla_w[i] = Matrix(this->weights[i].getNbRows(), this->weights[i].getNbColumns());
+        nabla_w[i].fillWith(0);
+    }
 
     for (auto training_data : mini_batch)
     {
-        this->backPropagation(training_data.first, training_data.second);
-        //auto [delta_nabla_b, delta_nabla_w] = this->backPropagation(training_data.first, training_data.second);
+
+        auto [delta_nabla_b, delta_nabla_w] = this->backPropagation(training_data.first, training_data.second);
+
+        for (std::size_t i = 0; i < nabla_b.size(); ++i)
+        {
+            nabla_b[i] = nabla_b[i] + delta_nabla_b[i];
+
+            nabla_w[i] += delta_nabla_w[i];
+        }
+    }
+
+    for (std::size_t i = 0; i < this->weights.size(); ++i)
+    {
+        this->biases[i] = this->biases[i] - (nabla_b[i] * (eta / mini_batch.size()));
+
+        this->weights[i] = this->weights[i] - nabla_w[i] * (eta / mini_batch.size());
     }
 }
 
-void Network::stochasticGradientDescent(std::valarray<std::pair<vect, vect>> &training_datas, int epochs, int mini_batch_size, double eta) //, const vect &test_data = {}
+void Network::stochasticGradientDescent(std::valarray<std::pair<vect, vect>> &training_datas, int epochs, int mini_batch_size, double eta, std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> test_data) //, const vect &test_data = {}
 {
 
     std::cout << "📚 SGD" << std::endl;
@@ -226,12 +251,6 @@ void Network::stochasticGradientDescent(std::valarray<std::pair<vect, vect>> &tr
     double nb_data = training_datas.size();
     std::cout << "nb data " << nb_data << std::endl;
     std::cout << nb_data << std::endl;
-
-    // auto indices = vect(nb_data);
-    // for (int i = 0; i < nb_data; i++)
-    // {
-    //     indices[i] = i;
-    // }
 
     for (int epoch = 0; epoch < epochs; epoch++)
     {
@@ -248,6 +267,17 @@ void Network::stochasticGradientDescent(std::valarray<std::pair<vect, vect>> &tr
             std::valarray<std::pair<vect, vect>> mini_batch = training_datas[std::slice(batch_num, mini_batch_size, 1)];
 
             this->update_mini_batch(mini_batch, eta);
+        }
+
+        if (test_data.size() > 0)
+        {
+            auto evaluation = this->evaluate(test_data);
+
+            std::cout << "Epoch " << epoch << ": " << evaluation << '/' << test_data.size() << std::endl;
+        }
+        else
+        {
+            std::cout << "Epoch " << epoch << " complete";
         }
     }
     std::cout << "🎈  fini" << std::endl;

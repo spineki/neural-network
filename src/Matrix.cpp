@@ -67,23 +67,118 @@ Matrix::Matrix(Matrix const &model)
     std::cout << "✔️  copy done: " << &model << " -> " << this << " |   " << ((this->values == model.values) ? "💥" : "✔️") << "  " << this->values << std::endl;
 }
 
-Matrix &Matrix::operator=(const Matrix &model)
+Matrix Matrix::operator=(const Matrix &rhs)
 {
-    std::cout << "🛠️  = construction: " << &model << " -> " << this << std::endl;
-    this->nb_rows = model.nb_rows;
-    this->nb_columns = model.nb_columns;
-    this->values = new double[nb_rows * nb_columns];
-    for (int i = 0; i < nb_rows; i++)
+
+    std::cout << "🛠️  =: " << &rhs << " -> " << this << std::endl;
+
+    std::cout << nb_rows << std::endl;
+    std::cout << rhs.nb_rows << std::endl;
+
+    // Only do assignment if RHS is a different object from this.
+    if (this != &rhs)
     {
-        for (int j = 0; j < nb_columns; j++)
+        delete[] this->values;
+        this->values = new double[nb_rows * nb_columns];
+
+        nb_rows = rhs.nb_rows;
+        nb_columns = rhs.nb_columns;
+        values = new double[nb_rows * nb_columns];
+        for (int i = 0; i < nb_rows; i++)
         {
-            int position = i * nb_columns + j;
-            this->values[position] = model.values[position];
+            for (int j = 0; j < nb_columns; j++)
+            {
+                int position = i * nb_columns + j;
+                this->values[position] = rhs.values[position];
+            }
         }
     }
 
-    std::cout << "✔️  = done: " << &model << " -> " << this << " |   " << ((this->values == model.values) ? "💥" : "✔️") << "  " << this->values << std::endl;
-};
+    // std::cout << "✔️  = done: " << &model << " -> " << this << " |   " << ((this->values == model.values) ? "💥" : "✔️") << "  " << this->values << std::endl;
+
+    return *this;
+}
+
+Matrix &operator+=(Matrix &m1, const Matrix &m2)
+{
+    assert(m1.nb_columns == m2.nb_columns);
+    assert(m1.nb_rows == m2.nb_rows);
+    for (int i = 0; i < m1.nb_rows; i++)
+    {
+        for (int j = 0; j < m1.nb_columns; j++)
+        {
+            int position = i * m1.nb_columns + j;
+            m1.values[position] = m1.values[position] + m2.values[position];
+        }
+    }
+
+    return m1;
+}
+
+Matrix &operator+(const Matrix &m1, const Matrix &m2)
+{
+
+    std::cout << "sum" << std::endl;
+    assert(m1.nb_columns == m2.nb_columns);
+    assert(m1.nb_rows == m2.nb_rows);
+
+    Matrix sum(m1.nb_rows, m1.nb_columns);
+
+    sum.nb_rows = m2.nb_rows;
+    sum.nb_columns = m2.nb_columns;
+    for (int i = 0; i < m1.nb_rows; i++)
+    {
+        for (int j = 0; j < m1.nb_columns; j++)
+        {
+            int position = i * m1.nb_columns + j;
+            sum.values[position] = m1.values[position] + m2.values[position];
+        }
+    }
+
+    return sum;
+}
+
+Matrix operator*(const Matrix &m, const double k)
+{
+
+    Matrix product(m.nb_rows, m.nb_columns);
+
+    product.nb_rows = m.nb_rows;
+    product.nb_columns = m.nb_columns;
+    for (int i = 0; i < m.nb_rows; i++)
+    {
+        for (int j = 0; j < m.nb_columns; j++)
+        {
+            int position = i * m.nb_columns + j;
+            product.values[position] = m.values[position] * k;
+        }
+    }
+
+    return product;
+}
+
+Matrix operator-(const Matrix &m1, const Matrix &m2)
+{
+    std::cout << &m1 << " " << &m2 << std::endl;
+
+    assert(m1.nb_columns == m2.nb_columns);
+    assert(m1.nb_rows == m2.nb_rows);
+
+    Matrix sub(m1.nb_rows, m1.nb_columns);
+
+    sub.nb_rows = m2.nb_rows;
+    sub.nb_columns = m2.nb_columns;
+    for (int i = 0; i < m1.nb_rows; i++)
+    {
+        for (int j = 0; j < m1.nb_columns; j++)
+        {
+            int position = i * m1.nb_columns + j;
+            sub.values[position] = m1.values[position] - m2.values[position];
+        }
+    }
+
+    return sub;
+}
 
 // METHODS
 
@@ -91,6 +186,27 @@ void Matrix::randomInit()
 {
     // std::cout << "Random init" << std::endl;
     fill_array_with_random(this->values, this->nb_rows * this->nb_columns, 0, 1);
+}
+
+void Matrix::fillWith(double value)
+{
+    for (int i = 0; i < this->nb_rows; i++)
+    {
+        for (int j = 0; j < this->nb_columns; j++)
+        {
+            this->set(i, j, value);
+        }
+    }
+}
+
+int const Matrix::getNbColumns()
+{
+    return this->nb_columns;
+}
+
+int const Matrix::getNbRows()
+{
+    return this->nb_rows;
 }
 
 double const Matrix::get(int i, int j)
