@@ -10,7 +10,19 @@
 std::random_device rd;
 std::mt19937 rng(rd());
 
+//Helpers
+
 void fill_array_with_random(std::valarray<double> &array, double a = 0, double b = 1)
+{
+    std::uniform_real_distribution<double> uniform_distrib(a, b);
+
+    for (std::size_t i = 0; i < array.size(); i++)
+    {
+        array[i] = uniform_distrib(rng);
+    }
+}
+
+void fill_array_with_random(std::vector<double> &array, double a = 0, double b = 1)
 {
     std::uniform_real_distribution<double> uniform_distrib(a, b);
 
@@ -31,73 +43,17 @@ void fill_array_with_random(double *array, std::size_t size, double a = 0, doubl
     }
 }
 
-Matrix::Matrix()
-{
-    this->nb_rows = 0;
-    this->nb_columns = 0;
-    this->values = new double[0];
-
-    // std::cout << "❄️ Init Matrix : " << this->nb_rows << " X " << this->nb_columns << " = " << this->nb_columns * this->nb_rows << " : " << this << std::endl;
-}
-
+// CONSTRUCTORS
 Matrix::Matrix(int nb_rows, int nb_columns)
 {
     this->nb_rows = nb_rows;
     this->nb_columns = nb_columns;
-    this->values = new double[nb_rows * nb_columns];
+    this->data = std::vector<double>(nb_columns * nb_rows);
 
     // std::cout << "💧 Init Matrix : " << this->nb_rows << " X " << this->nb_columns << " = " << this->nb_columns * this->nb_rows << " : " << this << std::endl;
 }
 
-// Copy constructor
-Matrix::Matrix(Matrix const &model)
-{
-    // std::cout << "🛠️  copy construction: " << &model << " -> " << this << std::endl;
-    this->nb_rows = model.nb_rows;
-    this->nb_columns = model.nb_columns;
-    this->values = new double[nb_rows * nb_columns];
-    for (int i = 0; i < nb_rows; i++)
-    {
-        for (int j = 0; j < nb_columns; j++)
-        {
-            int position = i * nb_columns + j;
-            this->values[position] = model.values[position];
-        }
-    }
-
-    // std::cout << "✔️  copy done: " << &model << " -> " << this << " |   " << ((this->values == model.values) ? "💥" : "✔️") << "  " << this->values << std::endl;
-}
-
-Matrix Matrix::operator=(const Matrix &rhs)
-{
-
-    // std::cout << nb_rows << std::endl;
-    // std::cout << rhs.nb_rows << std::endl;
-
-    // Only do assignment if RHS is a different object from this.
-    if (this != &rhs)
-    {
-        delete[] this->values;
-        this->values = new double[nb_rows * nb_columns];
-
-        nb_rows = rhs.nb_rows;
-        nb_columns = rhs.nb_columns;
-        values = new double[nb_rows * nb_columns];
-        for (int i = 0; i < nb_rows; i++)
-        {
-            for (int j = 0; j < nb_columns; j++)
-            {
-                int position = i * nb_columns + j;
-                this->values[position] = rhs.values[position];
-            }
-        }
-    }
-
-    // std::cout << "✔️  = done: " << &model << " -> " << this << " |   " << ((this->values == model.values) ? "💥" : "✔️") << "  " << this->values << std::endl;
-
-    return *this;
-}
-
+// OVERLOADS
 Matrix operator+=(Matrix &m1, const Matrix &m2)
 {
     assert(m1.nb_columns == m2.nb_columns);
@@ -106,8 +62,7 @@ Matrix operator+=(Matrix &m1, const Matrix &m2)
     {
         for (int j = 0; j < m1.nb_columns; j++)
         {
-            int position = i * m1.nb_columns + j;
-            m1.values[position] = m1.values[position] + m2.values[position];
+            m1(i, j) = m1(i, j) + m2(i, j);
         }
     }
 
@@ -130,7 +85,7 @@ Matrix operator+(const Matrix &m1, const Matrix &m2)
         for (int j = 0; j < m1.nb_columns; j++)
         {
             int position = i * m1.nb_columns + j;
-            sum.values[position] = m1.values[position] + m2.values[position];
+            sum(i, j) = m1(i, j) + m2(i, j);
         }
     }
 
@@ -148,8 +103,7 @@ Matrix operator*(const Matrix &m, const double k)
     {
         for (int j = 0; j < m.nb_columns; j++)
         {
-            int position = i * m.nb_columns + j;
-            product.values[position] = m.values[position] * k;
+            product(i, j) = m(i, j) * k;
         }
     }
 
@@ -171,8 +125,7 @@ Matrix operator-(const Matrix &m1, const Matrix &m2)
     {
         for (int j = 0; j < m1.nb_columns; j++)
         {
-            int position = i * m1.nb_columns + j;
-            sub.values[position] = m1.values[position] - m2.values[position];
+            sub(i, j) = m1(i, j) - m2(i, j);
         }
     }
 
@@ -185,7 +138,7 @@ inline double &Matrix::operator()(const int row, const int col)
     {
         throw std::out_of_range("Matrix subscript out of bounds");
     }
-    return this->values[this->nb_columns * row + col];
+    return this->data[this->nb_columns * row + col];
 }
 
 inline double Matrix::operator()(const int row, const int col) const
@@ -194,7 +147,7 @@ inline double Matrix::operator()(const int row, const int col) const
     {
         throw std::out_of_range("Matrix subscript out of bounds");
     }
-    return this->values[this->nb_columns * row + col];
+    return this->data[this->nb_columns * row + col];
 }
 
 // METHODS
@@ -202,7 +155,17 @@ inline double Matrix::operator()(const int row, const int col) const
 void Matrix::randomInit()
 {
     // std::cout << "Random init" << std::endl;
-    fill_array_with_random(this->values, this->nb_rows * this->nb_columns, -1, 1);
+    // TODO change this
+
+    fill_array_with_random(this->data, -1, 1);
+}
+
+void Matrix::testInit()
+{
+    for (int i = 0; i < this->data.size(); i++)
+    {
+        this->data[i] = i;
+    }
 }
 
 void Matrix::fillWith(double value)
@@ -260,19 +223,10 @@ Matrix const Matrix::transpose()
 // Destructor
 Matrix::~Matrix()
 {
-    //std::cout << "🔥  Destructeur appellé: " << this << " ressources : " << this->values << std::endl;
-
-    delete[] this->values;
     //std::cout << "💀  Destructeur terminé" << std::endl;
 }
 
-auto Matrix::test()
-{
-    return this->values;
-}
-
 // Compute
-
 std::valarray<double> Matrix::dot(const std::valarray<double> &X)
 {
     assert(this->nb_columns == X.size());

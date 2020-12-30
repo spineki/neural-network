@@ -1,29 +1,29 @@
 #pragma once
 #include <string>
 #include <valarray>
+#include <vector>
 
 class Matrix
 {
 
 private:
-    double *values;
+    std::vector<double> data;
     int nb_rows;
     int nb_columns;
 
 public:
-    Matrix();
-
     Matrix(int nb_rows, int nb_columns);
 
     // C
-    Matrix(Matrix const &other);
-    Matrix operator=(const Matrix &other);
+    // Matrix(Matrix const &other);
+    // Matrix operator=(const Matrix &other);
     friend Matrix operator+(const Matrix &m1, const Matrix &m2);
     friend Matrix operator+=(Matrix &m1, const Matrix &m2);
     friend Matrix operator*(const Matrix &m, const double k);
     friend Matrix operator-(const Matrix &m1, const Matrix &m2);
     // METHODS
     void randomInit();
+    void testInit();
     void fillWith(double value);
 
     int const getNbColumns();

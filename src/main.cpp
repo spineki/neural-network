@@ -31,19 +31,19 @@ int main()
 
     std::string folder = "../data/";
 
-    auto training_data = loadMnistTest(folder, 28);
-    auto test_data = loadMnistTrain(folder, 28);
+    auto test_data = loadMnistTest(folder, 28);
+    auto training_data = loadMnistTrain(folder, 28);
 
-    printImage(training_data[10].first, 28);
+    printImage(training_data[0].first, 28);
 
-    printImage(test_data[10].first, 28);
+    printImage(test_data[0].first, 28);
 
-    int layer_sizes[3] = {784, 20, 10};
+    int layer_sizes[3] = {784, 30, 10};
 
     std::cout << "Creating a network" << std::endl;
-    Network network(layer_sizes, 3, 0.1);
+    Network network(layer_sizes, 3);
 
-    network.stochasticGradientDescent(training_data, 30, 10, 1, test_data);
+    network.stochasticGradientDescent(training_data, 1000, 10, 25, test_data);
 
     return 0;
 }

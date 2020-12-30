@@ -102,5 +102,5 @@ std::valarray<std::pair<vect, vect>> loadMnistTrain(std::string folder_path, int
 
 std::valarray<std::pair<vect, vect>> loadMnistTest(std::string folder_path, int image_size = 28)
 {
-    return loadMnistFile(folder_path + "mnist_test.csv", image_size, 1'000); //10'0000
+    return loadMnistFile(folder_path + "mnist_test.csv", image_size, 100); //10'0000
 }

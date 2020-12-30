@@ -36,40 +36,35 @@ build PHONY: phony
 
 # Build rules for targets
 
-build src/MNT.p/main.cpp.o: cpp_COMPILER ../src/main.cpp
- DEPFILE = src/MNT.p/main.cpp.o.d
- DEPFILE_UNQUOTED = src/MNT.p/main.cpp.o.d
- ARGS = -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+build test/matrix_test.p/Matrix_test.cpp.o: cpp_COMPILER ../test/Matrix_test.cpp
+ DEPFILE = test/matrix_test.p/Matrix_test.cpp.o.d
+ DEPFILE_UNQUOTED = test/matrix_test.p/Matrix_test.cpp.o.d
+ ARGS = -Itest/matrix_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
 
-build src/MNT.p/Matrix.cpp.o: cpp_COMPILER ../src/Matrix.cpp
- DEPFILE = src/MNT.p/Matrix.cpp.o.d
- DEPFILE_UNQUOTED = src/MNT.p/Matrix.cpp.o.d
- ARGS = -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+build test/matrix_test.p/.._src_Matrix.cpp.o: cpp_COMPILER ../test/../src/Matrix.cpp
+ DEPFILE = test/matrix_test.p/.._src_Matrix.cpp.o.d
+ DEPFILE_UNQUOTED = test/matrix_test.p/.._src_Matrix.cpp.o.d
+ ARGS = -Itest/matrix_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
 
-build src/MNT.p/mnist_reader.cpp.o: cpp_COMPILER ../src/mnist_reader.cpp
- DEPFILE = src/MNT.p/mnist_reader.cpp.o.d
- DEPFILE_UNQUOTED = src/MNT.p/mnist_reader.cpp.o.d
- ARGS = -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
-
-build src/MNT.p/Network.cpp.o: cpp_COMPILER ../src/Network.cpp
- DEPFILE = src/MNT.p/Network.cpp.o.d
- DEPFILE_UNQUOTED = src/MNT.p/Network.cpp.o.d
- ARGS = -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
-
-build src/MNT: cpp_LINKER src/MNT.p/main.cpp.o src/MNT.p/Matrix.cpp.o src/MNT.p/mnist_reader.cpp.o src/MNT.p/Network.cpp.o
+build test/matrix_test: cpp_LINKER test/matrix_test.p/Matrix_test.cpp.o test/matrix_test.p/.._src_Matrix.cpp.o
  LINK_ARGS = -Wl,--as-needed -Wl,--no-undefined
 
-build test/testexe.p/Matrix_test.cpp.o: cpp_COMPILER ../test/Matrix_test.cpp
- DEPFILE = test/testexe.p/Matrix_test.cpp.o.d
- DEPFILE_UNQUOTED = test/testexe.p/Matrix_test.cpp.o.d
- ARGS = -Itest/testexe.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+build test/network_test.p/Network_test.cpp.o: cpp_COMPILER ../test/Network_test.cpp
+ DEPFILE = test/network_test.p/Network_test.cpp.o.d
+ DEPFILE_UNQUOTED = test/network_test.p/Network_test.cpp.o.d
+ ARGS = -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
 
-build test/testexe.p/.._src_Matrix.cpp.o: cpp_COMPILER ../test/../src/Matrix.cpp
- DEPFILE = test/testexe.p/.._src_Matrix.cpp.o.d
- DEPFILE_UNQUOTED = test/testexe.p/.._src_Matrix.cpp.o.d
- ARGS = -Itest/testexe.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+build test/network_test.p/.._src_Network.cpp.o: cpp_COMPILER ../test/../src/Network.cpp
+ DEPFILE = test/network_test.p/.._src_Network.cpp.o.d
+ DEPFILE_UNQUOTED = test/network_test.p/.._src_Network.cpp.o.d
+ ARGS = -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
 
-build test/testexe: cpp_LINKER test/testexe.p/Matrix_test.cpp.o test/testexe.p/.._src_Matrix.cpp.o
+build test/network_test.p/.._src_Matrix.cpp.o: cpp_COMPILER ../test/../src/Matrix.cpp
+ DEPFILE = test/network_test.p/.._src_Matrix.cpp.o.d
+ DEPFILE_UNQUOTED = test/network_test.p/.._src_Matrix.cpp.o.d
+ ARGS = -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+
+build test/network_test: cpp_LINKER test/network_test.p/Network_test.cpp.o test/network_test.p/.._src_Network.cpp.o test/network_test.p/.._src_Matrix.cpp.o
  LINK_ARGS = -Wl,--as-needed -Wl,--no-undefined
 
 # Test rules
@@ -112,7 +107,7 @@ build meson-uninstall: CUSTOM_COMMAND PHONY
 
 build uninstall: phony meson-uninstall
 
-build all: phony src/MNT test/testexe
+build all: phony test/matrix_test test/network_test
 
 build clean: phony meson-clean
 
@@ -120,13 +115,13 @@ build meson-clean: CUSTOM_COMMAND PHONY
  COMMAND = /usr/bin/ninja -t clean
  description = Cleaning
 
-build build.ninja: REGENERATE_BUILD ../meson.build ../src/meson.build ../test/meson.build meson-private/coredata.dat
+build build.ninja: REGENERATE_BUILD ../meson.build ../test/meson.build meson-private/coredata.dat
  pool = console
 
 build reconfigure: REGENERATE_BUILD PHONY
  pool = console
 
-build ../meson.build ../src/meson.build ../test/meson.build meson-private/coredata.dat: phony 
+build ../meson.build ../test/meson.build meson-private/coredata.dat: phony 
 
 default all
 

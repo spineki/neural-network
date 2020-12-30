@@ -1,38 +1,32 @@
 [
   {
     "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
-    "command": "c++ -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ src/MNT.p/main.cpp.o -MF src/MNT.p/main.cpp.o.d -o src/MNT.p/main.cpp.o -c ../src/main.cpp",
-    "file": "../src/main.cpp",
-    "output": "src/MNT.p/main.cpp.o"
-  },
-  {
-    "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
-    "command": "c++ -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ src/MNT.p/Matrix.cpp.o -MF src/MNT.p/Matrix.cpp.o.d -o src/MNT.p/Matrix.cpp.o -c ../src/Matrix.cpp",
-    "file": "../src/Matrix.cpp",
-    "output": "src/MNT.p/Matrix.cpp.o"
-  },
-  {
-    "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
-    "command": "c++ -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ src/MNT.p/mnist_reader.cpp.o -MF src/MNT.p/mnist_reader.cpp.o.d -o src/MNT.p/mnist_reader.cpp.o -c ../src/mnist_reader.cpp",
-    "file": "../src/mnist_reader.cpp",
-    "output": "src/MNT.p/mnist_reader.cpp.o"
-  },
-  {
-    "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
-    "command": "c++ -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ src/MNT.p/Network.cpp.o -MF src/MNT.p/Network.cpp.o.d -o src/MNT.p/Network.cpp.o -c ../src/Network.cpp",
-    "file": "../src/Network.cpp",
-    "output": "src/MNT.p/Network.cpp.o"
-  },
-  {
-    "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
-    "command": "c++ -Itest/testexe.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/testexe.p/Matrix_test.cpp.o -MF test/testexe.p/Matrix_test.cpp.o.d -o test/testexe.p/Matrix_test.cpp.o -c ../test/Matrix_test.cpp",
+    "command": "c++ -Itest/matrix_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/matrix_test.p/Matrix_test.cpp.o -MF test/matrix_test.p/Matrix_test.cpp.o.d -o test/matrix_test.p/Matrix_test.cpp.o -c ../test/Matrix_test.cpp",
     "file": "../test/Matrix_test.cpp",
-    "output": "test/testexe.p/Matrix_test.cpp.o"
+    "output": "test/matrix_test.p/Matrix_test.cpp.o"
   },
   {
     "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
-    "command": "c++ -Itest/testexe.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/testexe.p/.._src_Matrix.cpp.o -MF test/testexe.p/.._src_Matrix.cpp.o.d -o test/testexe.p/.._src_Matrix.cpp.o -c ../src/Matrix.cpp",
+    "command": "c++ -Itest/matrix_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/matrix_test.p/.._src_Matrix.cpp.o -MF test/matrix_test.p/.._src_Matrix.cpp.o.d -o test/matrix_test.p/.._src_Matrix.cpp.o -c ../src/Matrix.cpp",
     "file": "../src/Matrix.cpp",
-    "output": "test/testexe.p/.._src_Matrix.cpp.o"
+    "output": "test/matrix_test.p/.._src_Matrix.cpp.o"
+  },
+  {
+    "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
+    "command": "c++ -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/network_test.p/Network_test.cpp.o -MF test/network_test.p/Network_test.cpp.o.d -o test/network_test.p/Network_test.cpp.o -c ../test/Network_test.cpp",
+    "file": "../test/Network_test.cpp",
+    "output": "test/network_test.p/Network_test.cpp.o"
+  },
+  {
+    "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
+    "command": "c++ -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/network_test.p/.._src_Network.cpp.o -MF test/network_test.p/.._src_Network.cpp.o.d -o test/network_test.p/.._src_Network.cpp.o -c ../src/Network.cpp",
+    "file": "../src/Network.cpp",
+    "output": "test/network_test.p/.._src_Network.cpp.o"
+  },
+  {
+    "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
+    "command": "c++ -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/network_test.p/.._src_Matrix.cpp.o -MF test/network_test.p/.._src_Matrix.cpp.o.d -o test/network_test.p/.._src_Matrix.cpp.o -c ../src/Matrix.cpp",
+    "file": "../src/Matrix.cpp",
+    "output": "test/network_test.p/.._src_Matrix.cpp.o"
   }
 ]

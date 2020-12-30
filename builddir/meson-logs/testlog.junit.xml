@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites tests="2" errors="0" failures="0"><testsuite name="tutorial" tests="2" errors="0" failures="0" skipped="0"><testcase name="Matrix test" classname="Matrix test"><system-out>[doctest] doctest version is "2.4.4"
+[doctest] run with "--help" for options
+===============================================================================
+[doctest] test cases:  4 |  4 passed | 0 failed | 0 skipped
+[doctest] assertions: 20 | 20 passed | 0 failed |
+[doctest] Status: SUCCESS!</system-out></testcase><testcase name="Network test" classname="Network test"><system-out>[doctest] doctest version is "2.4.4"
+[doctest] run with "--help" for options
+📚  Network initialisation...
+Copying the number of neural by layer...
+Creating layers for biases: 2
+Initializing layer 0: 3 -&gt; 2
+  random weights...
+  random biaises...
+Initializing layer 1: 2 -&gt; 3
+  random weights...
+  random biaises...
+==========
+nb_layers 3
+Layer 0 : 3 neurons
+Poids
+0.000000 1.000000 2.000000 
+3.000000 4.000000 5.000000 
+Biais
+1.000000 2.000000 
+Layer 1 : 2 neurons
+Poids
+0.000000 1.000000 
+2.000000 3.000000 
+4.000000 5.000000 
+Biais
+1.000000 2.000000 3.000000 
+Layer 2 : 3 neurons
+
+==========
+77 272 467 ===============================================================================
+[doctest] test cases: 1 | 1 passed | 0 failed | 0 skipped
+[doctest] assertions: 1 | 1 passed | 0 failed |
+[doctest] Status: SUCCESS!</system-out></testcase></testsuite></testsuites>

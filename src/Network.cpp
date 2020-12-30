@@ -6,25 +6,16 @@
 #include "Network.hpp"
 #include "Matrix.hpp"
 #include <mnist_reader.hpp>
+#include <cassert>
 
 typedef std::valarray<double> vect;
 
-void print(const vect &array)
-{
-    for (double element : array)
-    {
-        printf("%f ", element);
-    }
-    printf("\n");
-}
-
-template <typename T>
-void fill_array_with_random(std::valarray<T> &array, double a = 0, double b = 1)
+void fill_valarray_random(vect &array, double a = 0, double b = 1)
 {
     std::random_device rd;
     std::mt19937 rng(rd());
 
-    std::uniform_real_distribution<T> uniform_distrib(a, b);
+    std::uniform_real_distribution<double> uniform_distrib(a, b);
 
     for (std::size_t i = 0; i < array.size(); i++)
     {
@@ -32,18 +23,14 @@ void fill_array_with_random(std::valarray<T> &array, double a = 0, double b = 1)
     }
 }
 
-template <typename T>
-void fill_array_with_random(T *array, std::size_t size, double a = 0, double b = 1)
+std::string vect_to_string(const vect &x)
 {
-    std::random_device rd;
-    std::mt19937 rng(rd());
-
-    std::uniform_real_distribution<T> uniform_distrib(a, b);
-
-    for (int i = 0; i < size; i++)
+    std::string display = "";
+    for (auto elem : x)
     {
-        array[i] = uniform_distrib(rng);
+        display += std::to_string(elem) + " ";
     }
+    return display;
 }
 
 double sigmoid(double x)
@@ -51,45 +38,17 @@ double sigmoid(double x)
     return 1.0 / (1.0 + std::exp(-x));
 }
 
-double sigmoid_prime(double x)
-{
-    return sigmoid(x) * (1 - sigmoid(x));
-}
-
-int argmax(const vect &X)
-{
-    int arg = 0;
-    int max = X[0];
-    for (int i = 0; i < (int)X.size(); i++)
-    {
-        if (X[i] > max)
-        {
-            max = X[i];
-            arg = i;
-        }
-    }
-
-    return arg;
-}
-
-vect cost_derivative(vect output_activations, vect y)
-{
-    return (output_activations - y);
-}
-
-Network::Network(int *layer_sizes, int nb_layer, double learning_rate)
+// Constructor
+// tested
+Network::Network(int *layer_sizes, std::size_t nb_layer)
 {
     std::cout << "📚  Network initialisation..." << std::endl;
-    this->learning_rate = learning_rate;
     this->nb_layer = nb_layer;
 
-    // copy of number of neurals by layers
     std::cout << "Copying the number of neural by layer..." << std::endl;
     this->layer_sizes = new int[nb_layer];
     std::copy(layer_sizes, layer_sizes + nb_layer, this->layer_sizes);
 
-    // initializing (nb_layer -1) numbers for biaises
-    // this->biases =std::valarray<double>(nb_layer-1).apply();
     std::cout << "Creating layers for biases: " << nb_layer - 1 << std::endl;
     this->biases.resize(nb_layer - 1);
 
@@ -103,233 +62,73 @@ Network::Network(int *layer_sizes, int nb_layer, double learning_rate)
 
         // randow weights
         std::cout << "  random weights..." << std::endl;
-
-        this->weights.emplace_back(Matrix(nb_neuron_output, nb_neuron_input));
+        this->weights.push_back(Matrix(nb_neuron_output, nb_neuron_input));
 
         this->weights[i].randomInit();
 
         //random biases
         std::cout << "  random biaises..." << std::endl;
         this->biases[i] = vect(nb_neuron_output);
-        fill_array_with_random<double>(this->biases[i], 0.0, 1.0);
+
+        // to do, set correct filling again
+
+        // fill_valarray_random(this->biases[i], -1.0, 1.0);
+        for (int j = 0; j < this->biases[i].size(); j++)
+        {
+            this->biases[i][j] = j + 1;
+        }
     }
 }
 
-// methods
+void Network::loadTest()
+{
+    // test biases
+    for (int i = 0; i < this->nb_layer - 1; i++)
+    {
+        for (int j = 0; j < this->biases[i].size(); j++)
+        {
+            this->biases[i][j] = j + 1;
+            this->weights[i].testInit();
+        }
+    }
+}
+//methods
 
-/**
-     * @brief passe the input throught the network and return an ouput vector
-     * @param A: vector of inputs
-     * @param: size, size of the inputs
-     **/
+// tested
 std::valarray<double> Network::feedForward(const std::valarray<double> &inputs)
 {
-    /*
-        """Return the output of the network if "a" is input."""
-        for b, w in zip(self.biases, self.weights):
-            a = sigmoid(np.dot(w, a)+b)
-        return a
-        */
 
-    std::valarray<double> outputs(inputs);
+    vect outputs = inputs;
 
-    for (int layer = 0; layer < this->weights.size(); ++layer)
+    for (std::size_t i = 0; i < this->biases.size(); i++)
     {
-        vect bias = this->biases[layer];
-        outputs = (this->weights[layer].dot(outputs) + bias).apply(sigmoid);
+        outputs = (this->weights[i].dot(outputs) + this->biases[i]); //.apply(sigmoid);
     }
 
     return outputs;
 }
 
-std::pair<std::valarray<vect>, std::valarray<Matrix>> Network::backPropagation(const vect &X, const vect &Y)
+// tested
+std::string const Network::to_string()
 {
-
-    // std::cout << "  ⚙️  backPropagation of " << this->weights.size() << " wieghts" << std::endl;
-
-    std::valarray<vect> nabla_b(this->biases.size());
-    std::valarray<Matrix> nabla_w(this->weights.size());
-    for (std::size_t i = 0; i < this->weights.size(); i++)
-    {
-        nabla_w[i] = (this->weights[i]);
-    }
-
-    // std::cout << "vector created" << std::endl;
-
-    vect activation(X);
-
-    std::valarray<vect> activations(this->nb_layer);
-    activations[0] = X;
-
-    std::valarray<vect> zs(this->nb_layer - 1);
-
-    // std::cout << "Feedforward:" << std::endl;
+    std::string display = "==========\nnb_layers " + std::to_string(this->nb_layer) + "\n";
 
     for (int i = 0; i < this->nb_layer - 1; i++)
     {
-        // std::cout << "layer " << i << "/" << this->nb_layer - 1 << std::endl;
-        // copies de matrices inutiles, TODO
-        Matrix w = this->weights[i];
-        vect b = this->biases[i];
-
-        printImage(X, 28);
-
-        vect z = w.dot(activation) + b;
-        printImage(z, 28);
-
-        zs[i] = z;
-        print(z);
-        activation = z.apply(sigmoid);
-
-        print(activation);
-
-        activations[i + 1] = activation;
+        display += "Layer " + std::to_string(i) + " : " + std::to_string(this->layer_sizes[i]) + " neurons\n";
+        display += "Poids\n";
+        display += this->weights[i].to_string();
+        display += "Biais\n";
+        display += vect_to_string(this->biases[i]) + "\n";
     }
+    display += "Layer " + std::to_string(this->nb_layer - 1) + " : " + std::to_string(this->layer_sizes[this->nb_layer - 1]) + " neurons\n";
 
-    // testé jusqu'ici: TODO aller plus loin
-
-    // std::cout << "Backpropag" << std::endl;
-    vect delta = cost_derivative(activations[activations.size() - 1], Y) * (zs[zs.size() - 1]).apply(sigmoid_prime);
-
-    nabla_b[nabla_b.size() - 1] = delta;
-
-    nabla_w[nabla_w.size() - 1] = dot(delta, activations[activations.size() - 2]);
-
-    for (int l = 2; l < this->nb_layer; l++)
-    {
-        // std::cout << "b layer " << l << "/" << this->nb_layer << std::endl;
-        vect z = zs[zs.size() - l];
-
-        print(z);
-        vect sp = z.apply(sigmoid_prime);
-
-        Matrix weight_T = this->weights[this->weights.size() - l + 1].transpose();
-
-        delta = weight_T.dot(delta) * sp;
-        nabla_b[nabla_b.size() - l] = delta;
-        nabla_w[nabla_w.size() - l] = dot(delta, activations[activations.size() - l - 1]);
-    }
-
-    // std::cout<< "🎈 fin backpropagation" << std::endl;
-
-    std::cout << nabla_w[0].to_string() << std::endl;
-
-    return {nabla_b, nabla_w};
+    display += "\n==========";
+    return display;
 }
 
-/**
-     * @brief mets à jour les poids et les biais par déscente de gradient et rétropropagation sur un batch
-     *
-* */
-void Network::update_mini_batch(std::valarray<std::pair<vect, vect>> &mini_batch, double eta)
-{
-    // std::cout << "⚙️  update_mini_batch. Size=" << mini_batch.size() << std::endl;
-
-    std::valarray<vect> nabla_b(this->biases.size());
-    std::valarray<Matrix> nabla_w(this->weights.size());
-
-    for (int i = 0; i < nabla_b.size(); i++)
-    {
-        nabla_b[i] = vect(this->biases[i].size());
-    }
-
-    for (int i = 0; i < nabla_w.size(); i++)
-    {
-        nabla_w[i] = Matrix(this->weights[i].getNbRows(), this->weights[i].getNbColumns());
-        nabla_w[i].fillWith(0);
-    }
-
-    for (std::pair<vect, vect> training_data : mini_batch)
-    {
-        auto [delta_nabla_b, delta_nabla_w] = this->backPropagation(training_data.first, training_data.second);
-
-        for (std::size_t i = 0; i < nabla_b.size(); ++i)
-        {
-            nabla_b[i] = nabla_b[i] + delta_nabla_b[i];
-
-            nabla_w[i] += delta_nabla_w[i];
-        }
-    }
-
-    for (std::size_t i = 0; i < this->weights.size(); ++i)
-    {
-        this->biases[i] = this->biases[i] - (nabla_b[i] * ((double)eta / mini_batch.size()));
-        this->weights[i] = this->weights[i] - (nabla_w[i] * ((double)eta / mini_batch.size()));
-    }
-}
-
-void Network::stochasticGradientDescent(std::valarray<std::pair<vect, vect>> &training_datas, int epochs, int mini_batch_size, double eta, std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> test_data) //, const vect &test_data = {}
-{
-
-    std::cout << "📚 SGD" << std::endl;
-
-    std::random_device rd;
-    std::mt19937 rng(rd());
-
-    double nb_data = training_datas.size();
-    std::cout << "nb data " << nb_data << std::endl;
-    std::cout << nb_data << std::endl;
-
-    for (int epoch = 0; epoch < epochs; epoch++)
-    {
-        // std::cout << "Running epochs:" << epoch << '/' << epochs << std::endl;
-
-        std::shuffle(std::begin(training_datas), std::end(training_datas), rng);
-
-        // std::cout << training_datas[0].first[180] << std::endl;
-
-        int nb_batch = std::ceil(nb_data / mini_batch_size);
-        // std::cout << "nb_batch:" << nb_batch << std::endl;
-
-        for (int batch_num = 0; batch_num < nb_batch; batch_num += mini_batch_size)
-        {
-            // std::cout << "  Running batch:" << batch_num << '/' << nb_batch << std::endl;
-            std::valarray<std::pair<vect, vect>> mini_batch = training_datas[std::slice(batch_num, mini_batch_size, 1)];
-
-            this->update_mini_batch(mini_batch, eta);
-        }
-
-        if (test_data.size() > 0)
-        {
-            auto evaluation = this->evaluate(test_data);
-
-            std::cout << "Epoch " << epoch << ": " << ((double)evaluation / test_data.size()) * 100 << '%' << std::endl;
-        }
-        else
-        {
-            std::cout << "Epoch " << epoch << " complete";
-        }
-    }
-    std::cout << "🎈  fini" << std::endl;
-}
-
-int Network::evaluate(const std::valarray<std::pair<vect, vect>> &test_datas)
-{
-
-    int sum = 0;
-    for (auto &pair : test_datas)
-    {
-        vect output = this->feedForward(pair.first);
-        // std::cout << " target" << std::endl;
-        ///print(pair.second);
-        // std::cout << " after feed forward" << std::endl;
-        //print(output);
-
-        // std::cout << "argmax : " << argmax(output) << std::endl;
-        // std::cout << "argmax : " << argmax(pair.second) << std::endl;
-
-        // if same repartition between computed and expected
-        if (argmax(output) == argmax(pair.second))
-        {
-            auto label = argmax(output);
-            sum += 1;
-        }
-    }
-
-    return sum;
-}
-
-Network::~Network()
-{
-    delete[] this->layer_sizes;
-}
+// //std::pair<std::valarray<std::valarray<double>>, std::valarray<Matrix>> backPropagation(const std::valarray<double> &X, const std::valarray<double> &Y);
+// std::pair<std::vector<std::valarray<double>>, std::valarray<Matrix>> backPropagation(const std::valarray<double> &X, const std::valarray<double> &Y);
+// void update_mini_batch(std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> &mini_batch, double eta);
+// void stochasticGradientDescent(std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> &training_datas, int epochs, int mini_batch_size, double eta, std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> test_data);
+// int evaluate(const std::valarray<std::pair<std::valarray<double>, std::valarray<double>>> &test_datas);
