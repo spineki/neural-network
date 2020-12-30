@@ -1,4 +1,4 @@
-Build started at 2020-12-30T00:38:54.567180
+Build started at 2020-12-30T18:26:03.220907
 Main binary: /usr/bin/python3
 Build Options: -Dbuildtype=debug -Dbackend=ninja
 Python system: Linux
@@ -27,8 +27,8 @@ Build targets in project: 2
 
 Found ninja-1.10.0 at /usr/bin/ninja
 Running compile:
-Working directory:  /tmp/tmpttgv0sw3
-Command line:  c++ /tmp/tmpttgv0sw3/testfile.cpp -o /tmp/tmpttgv0sw3/output.obj -pipe -D_FILE_OFFSET_BITS=64 -c -std=c++17 
+Working directory:  /tmp/tmp3ou1__mp
+Command line:  c++ /tmp/tmp3ou1__mp/testfile.cpp -o /tmp/tmp3ou1__mp/output.obj -pipe -D_FILE_OFFSET_BITS=64 -c -std=c++17 
 
 Code:
  int i = static_cast<int>(0);
@@ -38,8 +38,8 @@ Compiler stderr:
  
 Compiler accepts -std=c++17: YES
 Running compile:
-Working directory:  /home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir/meson-private/tmpip4_lp28
-Command line:  c++ /home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir/meson-private/tmpip4_lp28/testfile.cpp -o /home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir/meson-private/tmpip4_lp28/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -fpermissive --print-search-dirs 
+Working directory:  /home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir/meson-private/tmp40godtpo
+Command line:  c++ /home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir/meson-private/tmp40godtpo/testfile.cpp -o /home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir/meson-private/tmp40godtpo/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -fpermissive --print-search-dirs 
 
 Code:
  

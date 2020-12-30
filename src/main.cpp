@@ -43,6 +43,8 @@ int main()
     std::cout << "Creating a network" << std::endl;
     Network network(layer_sizes, 3);
 
+
+
     network.stochasticGradientDescent(training_data, 1000, 10, 25, test_data);
 
     return 0;

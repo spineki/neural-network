@@ -28,5 +28,11 @@
     "command": "c++ -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/network_test.p/.._src_Matrix.cpp.o -MF test/network_test.p/.._src_Matrix.cpp.o.d -o test/network_test.p/.._src_Matrix.cpp.o -c ../src/Matrix.cpp",
     "file": "../src/Matrix.cpp",
     "output": "test/network_test.p/.._src_Matrix.cpp.o"
+  },
+  {
+    "directory": "/home/noyau/noyau_linux/Programmation_Noyau/CXX/MLN/builddir",
+    "command": "c++ -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g -MD -MQ test/network_test.p/.._src_mnist_reader.cpp.o -MF test/network_test.p/.._src_mnist_reader.cpp.o.d -o test/network_test.p/.._src_mnist_reader.cpp.o -c ../src/mnist_reader.cpp",
+    "file": "../src/mnist_reader.cpp",
+    "output": "test/network_test.p/.._src_mnist_reader.cpp.o"
   }
 ]

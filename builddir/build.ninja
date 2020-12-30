@@ -64,7 +64,12 @@ build test/network_test.p/.._src_Matrix.cpp.o: cpp_COMPILER ../test/../src/Matri
  DEPFILE_UNQUOTED = test/network_test.p/.._src_Matrix.cpp.o.d
  ARGS = -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
 
-build test/network_test: cpp_LINKER test/network_test.p/Network_test.cpp.o test/network_test.p/.._src_Network.cpp.o test/network_test.p/.._src_Matrix.cpp.o
+build test/network_test.p/.._src_mnist_reader.cpp.o: cpp_COMPILER ../test/../src/mnist_reader.cpp
+ DEPFILE = test/network_test.p/.._src_mnist_reader.cpp.o.d
+ DEPFILE_UNQUOTED = test/network_test.p/.._src_mnist_reader.cpp.o.d
+ ARGS = -Itest/network_test.p -Itest -I../test -I../include -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+
+build test/network_test: cpp_LINKER test/network_test.p/Network_test.cpp.o test/network_test.p/.._src_Network.cpp.o test/network_test.p/.._src_Matrix.cpp.o test/network_test.p/.._src_mnist_reader.cpp.o
  LINK_ARGS = -Wl,--as-needed -Wl,--no-undefined
 
 # Test rules
