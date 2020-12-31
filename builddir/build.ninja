@@ -36,6 +36,29 @@ build PHONY: phony
 
 # Build rules for targets
 
+build src/MNT.p/main.cpp.o: cpp_COMPILER ../src/main.cpp
+ DEPFILE = src/MNT.p/main.cpp.o.d
+ DEPFILE_UNQUOTED = src/MNT.p/main.cpp.o.d
+ ARGS = -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+
+build src/MNT.p/Matrix.cpp.o: cpp_COMPILER ../src/Matrix.cpp
+ DEPFILE = src/MNT.p/Matrix.cpp.o.d
+ DEPFILE_UNQUOTED = src/MNT.p/Matrix.cpp.o.d
+ ARGS = -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+
+build src/MNT.p/mnist_reader.cpp.o: cpp_COMPILER ../src/mnist_reader.cpp
+ DEPFILE = src/MNT.p/mnist_reader.cpp.o.d
+ DEPFILE_UNQUOTED = src/MNT.p/mnist_reader.cpp.o.d
+ ARGS = -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+
+build src/MNT.p/Network.cpp.o: cpp_COMPILER ../src/Network.cpp
+ DEPFILE = src/MNT.p/Network.cpp.o.d
+ DEPFILE_UNQUOTED = src/MNT.p/Network.cpp.o.d
+ ARGS = -Isrc/MNT.p -Isrc -I../src -I../include -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -std=c++17 -g
+
+build src/MNT: cpp_LINKER src/MNT.p/main.cpp.o src/MNT.p/Matrix.cpp.o src/MNT.p/mnist_reader.cpp.o src/MNT.p/Network.cpp.o
+ LINK_ARGS = -Wl,--as-needed -Wl,--no-undefined
+
 build test/matrix_test.p/Matrix_test.cpp.o: cpp_COMPILER ../test/Matrix_test.cpp
  DEPFILE = test/matrix_test.p/Matrix_test.cpp.o.d
  DEPFILE_UNQUOTED = test/matrix_test.p/Matrix_test.cpp.o.d
@@ -112,7 +135,7 @@ build meson-uninstall: CUSTOM_COMMAND PHONY
 
 build uninstall: phony meson-uninstall
 
-build all: phony test/matrix_test test/network_test
+build all: phony src/MNT test/matrix_test test/network_test
 
 build clean: phony meson-clean
 
@@ -120,13 +143,13 @@ build meson-clean: CUSTOM_COMMAND PHONY
  COMMAND = /usr/bin/ninja -t clean
  description = Cleaning
 
-build build.ninja: REGENERATE_BUILD ../meson.build ../test/meson.build meson-private/coredata.dat
+build build.ninja: REGENERATE_BUILD ../meson.build ../src/meson.build ../test/meson.build meson-private/coredata.dat
  pool = console
 
 build reconfigure: REGENERATE_BUILD PHONY
  pool = console
 
-build ../meson.build ../test/meson.build meson-private/coredata.dat: phony 
+build ../meson.build ../src/meson.build ../test/meson.build meson-private/coredata.dat: phony 
 
 default all
 

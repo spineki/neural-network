@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cassert>
 #include <stdexcept>
+#include <cmath>
 
 #include "Matrix.hpp"
 
@@ -151,6 +152,18 @@ inline double Matrix::operator()(const int row, const int col) const
 }
 
 // METHODS
+double Matrix::max() const
+{
+    double maxi = 0;
+    for (double e : this->data)
+    {
+        if (std::abs(e) > maxi)
+        {
+            maxi = std::abs(e);
+        }
+    }
+    return maxi;
+}
 
 void Matrix::randomInit()
 {

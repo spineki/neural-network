@@ -10,6 +10,7 @@
 
 std::string folder = "../data/";
 auto test_data = loadMnistTest(folder, 28);
+auto training_data = loadMnistTrain(folder, 28);
 
 void print_v(const std::valarray<double> &array)
 {
@@ -59,16 +60,15 @@ TEST_CASE("NETWORK backpropagation")
     for (auto &data : test_data)
     {
         auto [nabla_b, nabla_w] = network.backPropagation(data.first, data.second);
-        for (auto &nabla : nabla_b)
-        {
-            print_v(nabla);
-        }
-
-        for (auto &nabla : nabla_w)
-        {
-            std::cout << nabla.to_string() << std::endl;
-        }
     }
+}
+
+TEST_CASE("NETWORK SGD")
+{
+    int layer_sizes[3] = {784, 30, 10};
+    Network network(layer_sizes, 3);
+
+    network.stochasticGradientDescent(training_data, 30, 10, 1.0, test_data);
 }
 
 // Layer 0 : 3 neurons

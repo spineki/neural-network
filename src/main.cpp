@@ -17,13 +17,13 @@
 * Fill an array with random values in [a, b[ 
 **/
 
-template <typename T>
-void print(std::valarray<T> &array)
+void print_a(const std::valarray<double> &array)
 {
-    for (T element : array)
+    for (auto element : array)
     {
-        std::cout << std::to_string(element) << "" << std::endl;
+        std::cout << std::to_string(element) << " ";
     }
+    std::cout << std::endl;
 }
 
 int main()
@@ -38,14 +38,22 @@ int main()
 
     printImage(test_data[0].first, 28);
 
-    int layer_sizes[3] = {784, 30, 10};
+    int layer_sizes[3] = {784, 10};
 
     std::cout << "Creating a network" << std::endl;
-    Network network(layer_sizes, 3);
+    Network network(layer_sizes, 2);
 
+    auto a = test_data;
+    a.resize(0);
 
+    network.stochasticGradientDescent(training_data, 1000, 10, 3.0, test_data);
 
-    network.stochasticGradientDescent(training_data, 1000, 10, 25, test_data);
+    for (int i = 0; i < 10; i++)
+    {
+        printImage(training_data[i].first, 28);
+        print_a(network.feedForward(training_data[i].first));
+        print_a(training_data[i].second);
+    }
 
     return 0;
 }

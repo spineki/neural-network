@@ -31,6 +31,7 @@ public:
 
     double &operator()(const int row, const int col);
     double operator()(const int row, const int col) const;
+    double max() const;
 
     Matrix const transpose();
 
