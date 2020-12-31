@@ -38,15 +38,15 @@ int main()
 
     printImage(test_data[0].first, 28);
 
-    int layer_sizes[3] = {784, 10};
+    int layer_sizes[3] = {784, 30, 10};
 
     std::cout << "Creating a network" << std::endl;
-    Network network(layer_sizes, 2);
+    Network network(layer_sizes, 3);
 
     auto a = test_data;
     a.resize(0);
 
-    network.stochasticGradientDescent(training_data, 1000, 10, 3.0, test_data);
+    network.stochasticGradientDescent(training_data, 10, 10, 3.0, test_data);
 
     for (int i = 0; i < 10; i++)
     {
