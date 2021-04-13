@@ -85,7 +85,6 @@ Matrix operator+(const Matrix &m1, const Matrix &m2)
     {
         for (int j = 0; j < m1.nb_columns; j++)
         {
-            int position = i * m1.nb_columns + j;
             sum(i, j) = m1(i, j) + m2(i, j);
         }
     }
@@ -175,7 +174,7 @@ void Matrix::randomInit()
 
 void Matrix::testInit()
 {
-    for (int i = 0; i < this->data.size(); i++)
+    for (std::size_t i = 0; i < this->data.size(); i++)
     {
         this->data[i] = i;
     }

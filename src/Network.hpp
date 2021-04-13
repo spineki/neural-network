@@ -34,7 +34,7 @@ public:
     std::valarray<double> feedForward(const std::valarray<double> &inputs);
     std::pair<std::vector<std::valarray<double>>, std::vector<Matrix>> backPropagation(const std::valarray<double> &X, const std::valarray<double> &Y);
     void update_mini_batch(const std::vector<std::pair<std::valarray<double>, std::valarray<double>>> &mini_batch, double eta);
-    void stochasticGradientDescent(std::vector<std::pair<std::valarray<double>, std::valarray<double>>> &training_datas, int epochs, int mini_batch_size, double eta, std::vector<std::pair<std::valarray<double>, std::valarray<double>>> test_data);
+    void stochasticGradientDescent(std::vector<std::pair<std::valarray<double>, std::valarray<double>>> &training_datas, int epochs, std::size_t mini_batch_size, double eta, std::vector<std::pair<std::valarray<double>, std::valarray<double>>> test_data);
     std::size_t evaluate(const std::vector<std::pair<std::valarray<double>, std::valarray<double>>> &test_datas);
 };
 

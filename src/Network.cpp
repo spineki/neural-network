@@ -90,7 +90,7 @@ Network::Network(int *layer_sizes, std::size_t nb_layer)
     this->biases.resize(nb_layer - 1);
 
     // initializing (nb_layer -1) number of arrays for weights
-    for (int i = 0; i < nb_layer - 1; i++)
+    for (std::size_t i = 0; i < nb_layer - 1; i++)
     {
         int nb_neuron_input = layer_sizes[i];
         int nb_neuron_output = layer_sizes[i + 1];
@@ -117,9 +117,9 @@ Network::Network(int *layer_sizes, std::size_t nb_layer)
 void Network::loadTest()
 {
     // test biases
-    for (int i = 0; i < this->nb_layer - 1; i++)
+    for (std::size_t i = 0; i < this->nb_layer - 1; i++)
     {
-        for (int j = 0; j < this->biases[i].size(); j++)
+        for (std::size_t j = 0; j < this->biases[i].size(); j++)
         {
             this->biases[i][j] = j + 1;
             this->weights[i].testInit();
@@ -248,7 +248,7 @@ void Network::update_mini_batch(const std::vector<std::pair<std::valarray<double
     }
 }
 
-void Network::stochasticGradientDescent(std::vector<std::pair<vect, vect>> &training_datas, int epochs, int mini_batch_size, double eta, std::vector<std::pair<vect, vect>> test_data) //, const vect &test_data = {}
+void Network::stochasticGradientDescent(std::vector<std::pair<vect, vect>> &training_datas, int epochs, std::size_t mini_batch_size, double eta, std::vector<std::pair<vect, vect>> test_data) //, const vect &test_data = {}
 {
 
     std::cout << "📚 SGD" << std::endl;
@@ -270,10 +270,10 @@ void Network::stochasticGradientDescent(std::vector<std::pair<vect, vect>> &trai
 
         // std::cout << training_datas[0].first[180] << std::endl;
 
-        int nb_batch = std::ceil(nb_data / mini_batch_size);
+        std::size_t nb_batch = std::ceil(nb_data / mini_batch_size);
         // std::cout << "nb_batch:" << nb_batch << std::endl;
 
-        for (int batch_num = 0; batch_num < nb_batch; batch_num += mini_batch_size)
+        for (std::size_t batch_num = 0; batch_num < nb_batch; batch_num += mini_batch_size)
         {
             // copying only a slice of vector
             std::vector<std::pair<vect, vect>> mini_batch(mini_batch_size);
@@ -361,7 +361,7 @@ std::size_t Network::evaluate(const std::vector<std::pair<std::valarray<double>,
             // print(pair.second);
             // print(output);
 
-            auto label = argmax(output);
+            //auto label = argmax(output);
             sum += 1;
         }
     }
